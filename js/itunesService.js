@@ -10,4 +10,54 @@ app.service('itunesService', function($http, $q){
   //You can return the http request or you can make your own promise in order to manipulate the data before you resolve it.
 
     //Code here
+    //promise is a concept. deffered object is an object that carries an object. deffered also has a 
+    this.getArtist = function(artist) {
+      
+      var deferred = $q.defer();
+       $http({
+        method: 'JSONP',
+        url: 'https://itunes.apple.com/search?term=' + artist + '&callback=JSON_CALLBACK'
+      
+
+      }).then(function(data) {
+        var res = data.data.results
+       
+        var newarr = [];
+        for(i = 0; i < res.length; i++){
+           var newObj = {};
+          newObj.Artist = res[i].artistName
+          newObj.AlbumArt = res[i].artworkUrl30
+          newObj.Collection = res[i].collectionName
+          newObj.CollectionPrice = res[i].collectionPrice
+          newObj.Play = res[i].radioStationUrl
+          newObj.Type = res[i].primaryGenreName
+          newObj.Tracks = res[i].trackCount
+          newarr.push(newObj)
+          
+        }
+        
+
+
+        deferred.resolve(newarr)
+      
+
+
+      })//, //function(error) {
+      //   deferred.reject(error)
+      //   console.log('promise failed', error )
+      //   
+      // }) 
+      return deferred.promise
+
+    }; 
+
+
+// albumart, artist, collection, collectionprice
+   // var deferred = $q.defer();
+//push objects into an array. 
+// once you ahve that array send that array back to the control which has ng-grid
+       
+
+   //     return deferred.promise;
+
 });
